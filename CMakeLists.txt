@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(ADAN VERSION 1.0.0 LANGUAGES CXX)
+project(Blinxlang VERSION 1.0.0 LANGUAGES CXX)
 
 if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message(FATAL_ERROR "This project requires GCC. "
