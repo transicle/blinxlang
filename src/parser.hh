@@ -41,7 +41,7 @@ public:
     std::vector<Box<Expr>> parse()
     {
         std::vector<Box<Expr>> exprs;
-        while (m_current.ty != TokenType::EOF_)
+        while (m_current.ty != TokenType::Eof)
             exprs.push_back(parse_expr());
 
         return exprs;
