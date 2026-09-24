@@ -4,6 +4,7 @@
 #include "lexer.hh"
 
 #include <format>
+#include <utility>
 #include <stdexcept>
 #include <vector>
 
@@ -74,5 +75,37 @@ private:
 
     Box<Expr> parse_additive() {}
     Box<Expr> parse_multiplicative() {}
-    Box<Expr> parse_primary() {}
+
+    Box<Expr> parse_primary()
+    {
+        switch (m_current.token_type)
+        {
+        case TokenType::Int:
+        {
+            int64_t value{};
+            auto [pointer, ec] = std::from_chars(
+                m_current.lexeme.data(),
+                m_current.lexeme.data() + m_current.lexeme.size(),
+                value);
+
+            if (ec != std::errc())
+                throw std::runtime_error("Failed to parse integer literal");
+
+            advance();
+            return std::make_unique<Literal>(value);
+        }
+
+        case TokenType::LParen:
+        {
+            advance();
+            auto expr = parse_expr();
+            expect(TokenType::RParen);
+
+            return expr;
+        }
+
+        default:
+            throw std::runtime_error(std::format("Expected primary, got {}", format_token_type(m_current.token_type)));
+        }
+    }
 };

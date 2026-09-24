@@ -10,6 +10,8 @@ enum class TokenType : std::uint8_t
     Mul,
     Sub,
     Div,
+    LParen,
+    RParen,
     Eof,
 };
 
@@ -43,6 +45,12 @@ public:
         case '/':
             advance();
             return Token{TokenType::Div, "/"};
+        case '(':
+            advance();
+            return Token{TokenType::LParen, "("};
+        case ')':
+            advance();
+            return Token{TokenType::RParen, ")"};
         default:
             if (std::isdigit(curr))
             {
