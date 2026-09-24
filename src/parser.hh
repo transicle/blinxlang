@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <vector>
 
+// NOTE: Box<T> is an alias to std::unique_ptr<T>
+
 constexpr std::string_view format_token_type(const TokenType token_type)
 {
     switch (token_type)
