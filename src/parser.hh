@@ -16,7 +16,7 @@ constexpr std::string_view format_token_type(const TokenType token_type)
     {
     case TokenType::Int:
         return "int";
-    case TokenType::Plus:
+    case TokenType::Add:
         return "+";
     case TokenType::Mul:
         return "*";
@@ -68,13 +68,46 @@ private:
         return advance();
     }
 
+    template <typename... T>
+    bool matches(T... types) const {
+        return ((m_current.token_type == types) || ...)}
+
     Box<Expr> parse_expr()
     {
         return parse_additive();
     }
 
-    Box<Expr> parse_additive() {}
-    Box<Expr> parse_multiplicative() {}
+    Box<Expr> parse_additive()
+    {
+        auto lhs = parse_multiplicative();
+
+        while (matches(TokenType::Add, TokenType::Sub))
+        {
+            auto op = m_current.token_type == TokenType::Add ? BinaryOp::Add : BinaryOp::Sub;
+            advance();
+
+            auto rhs = parse_primary();
+            lhs = std::make_unique<BinaryExpr>(op, std::move(lhs), std::move(rhs));
+        }
+
+        return lhs;
+    }
+
+    Box<Expr> parse_multiplicative()
+    {
+        auto lhs = parse_primary();
+
+        while (matches(TokenType::Mul, TokenType::Div))
+        {
+            auto op = m_current.token_type == TokenType::Mul ? BinaryOp::Mul : BinaryOp::Div;
+            advance();
+
+            auto rhs = parse_primary();
+            lhs = std::make_unique<BinaryExpr>(op, std::move(lhs), std::move(rhs));
+        }
+
+        return lhs;
+    }
 
     Box<Expr> parse_primary()
     {

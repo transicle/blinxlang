@@ -6,7 +6,7 @@
 enum class TokenType : std::uint8_t
 {
     Int,
-    Plus,
+    Add,
     Mul,
     Sub,
     Div,
@@ -35,7 +35,7 @@ public:
         {
         case '+':
             advance();
-            return Token{TokenType::Plus, "+"};
+            return Token{TokenType::Add, "+"};
         case '*':
             advance();
             return Token{TokenType::Mul, "*"};
