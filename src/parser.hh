@@ -69,8 +69,10 @@ private:
     }
 
     template <typename... T>
-    bool matches(T... types) const {
-        return ((m_current.token_type == types) || ...)}
+    bool matches(T... types) const
+    {
+        return ((m_current.token_type == types) || ...);
+    }
 
     Box<Expr> parse_expr()
     {
@@ -86,7 +88,7 @@ private:
             auto op = m_current.token_type == TokenType::Add ? BinaryOp::Add : BinaryOp::Sub;
             advance();
 
-            auto rhs = parse_primary();
+            auto rhs = parse_multiplicative();
             lhs = std::make_unique<BinaryExpr>(op, std::move(lhs), std::move(rhs));
         }
 
@@ -116,7 +118,7 @@ private:
         case TokenType::Int:
         {
             int64_t value{};
-            auto [pointer, ec] = std::from_chars(
+            auto [ptr, ec] = std::from_chars(
                 m_current.lexeme.data(),
                 m_current.lexeme.data() + m_current.lexeme.size(),
                 value);
